@@ -7,14 +7,12 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: kelmoselmo.space
-    http:
+  - http:
       paths:
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: my-app
+            name: vproapp-service
             port:
               number: 8080
-              #
