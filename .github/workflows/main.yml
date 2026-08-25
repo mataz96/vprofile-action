@@ -27,22 +27,15 @@ jobs:
       - name: Checkstyle
         run: mvn checkstyle:checkstyle
 
-      # الترقية إلى v8 لتحميل أحدث نسخة تدعم Java 21
-      - name: Setup SonarQube Scanner
-        uses: warchant/setup-sonar-scanner@v8
-
       - name: SonarQube Scan
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          sonar-scanner \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
             -Dsonar.host.url=${{ secrets.SONAR_URL }} \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }} \
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }} \
-            -Dsonar.sources=src/ \
-            -Dsonar.junit.reportsPath=target/surefire-reports/ \
-            -Dsonar.jacoco.reportsPath=target/jacoco.exec \
-            -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml \
-            -Dsonar.java.binaries=target/test-classes/com/visualpathit/account
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
 
       # Check the Quality Gate status.
       - name: SonarQube Quality Gate check
