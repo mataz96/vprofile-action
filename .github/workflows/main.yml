@@ -17,11 +17,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Java 21
+      - name: Set up Java 8
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: "21"
+          java-version: "8"
 
       - name: Maven test
         run: mvn test
@@ -99,6 +99,9 @@ jobs:
       - name: Get Kube config file
         run: aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.EKS_CLUSTER }}
 
+      - name: Print config file
+        run: cat ~/.kube/config
+
       - name: Login to ECR Secret in Kubernetes
         run: aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
 
@@ -111,5 +114,6 @@ jobs:
           cluster-name: ${{ env.EKS_CLUSTER }}
           chart-path: helm/vprofilecharts
           namespace: default
-          values: appimage=${{ secrets.REGISTRY }},apptag=${{ github.run_number }}
           name: vprofile-stack
+          update-deps: "false"
+          values: appimage=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }},apptag=${{ github.run_number }}
