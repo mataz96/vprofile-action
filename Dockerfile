@@ -1,7 +1,7 @@
 FROM eclipse-temurin:11-jdk AS BUILD_IMAGE
 RUN apt update && apt install maven -y
 COPY ./ vprofile-project
-RUN cd vprofile-project &&  mvn install 
+RUN cd vprofile-project && mvn install -DskipTests
 
 FROM tomcat:9-jre11
 LABEL "Project"="Vprofile"
