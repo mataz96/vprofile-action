@@ -27,8 +27,9 @@ jobs:
       - name: Checkstyle
         run: mvn checkstyle:checkstyle
 
+      # الترقية إلى v8 لتحميل أحدث نسخة تدعم Java 21
       - name: Setup SonarQube Scanner
-        uses: warchant/setup-sonar-scanner@v7
+        uses: warchant/setup-sonar-scanner@v8
 
       - name: SonarQube Scan
         run: |
@@ -51,4 +52,3 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_URL }}
-          #####
