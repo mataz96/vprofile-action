@@ -112,3 +112,17 @@ jobs:
             --create-namespace \
             --set appimage=${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }} \
             --set apptag=${{ github.run_number }}
+
+      - name: Debug Deployment & Ingress
+        run: |
+          echo "=== PODS STATUS ==="
+          kubectl get pods -n default -o wide
+
+          echo "=== SERVICES & ENDPOINTS ==="
+          kubectl get svc,endpoints -n default
+
+          echo "=== INGRESS DETAILS ==="
+          kubectl describe ingress vpro-ingress -n default
+
+          echo "=== APP POD LOGS ==="
+          kubectl logs -l app=vproapp -n default --all-containers=true --tail=50 || true
